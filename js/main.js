@@ -73,15 +73,20 @@ function incrementValue(value) {
 
 function modalScreenInit() {
     modalScreen.addEventListener('click', function (event) {
-        if (this === event.target) this.classList.remove('active');
-    });
+        if (this === event.target) {
+            this.classList.remove('active');
+            document.addEventListener('touchstart', touchStart, false);
+        }
+    }, false);
 
     btnCloseModal.addEventListener('click', () => {
         modalScreen.classList.remove('active');
-    });
+        document.addEventListener('touchstart', touchStart, false);
+    }, false);
 
     btnOpenModal.addEventListener('click', () => {
         modalScreen.classList.add('active');
+        document.removeEventListener('touchstart', touchStart);
     }, false);
 }
 
