@@ -33,7 +33,10 @@ document.addEventListener('touchstart', touchStart, false)
 function handleClick(value) {
     swiperCount = value;
 
-    if (modalScreen.classList.contains('active')) modalScreen.classList.remove('active');
+    if (modalScreen.classList.contains('active')) {
+        modalScreen.classList.remove('active');
+        document.addEventListener('touchstart', touchStart);
+    }
 
     changeTrackPos(swiperCount);
 }
