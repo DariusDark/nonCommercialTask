@@ -1,3 +1,5 @@
+window.addEventListener('load', () => {
+
 const descriptionContainer = document.getElementById('descriptionContainer');
 const descriptionScroll = document.getElementById('descriptionScroll');
 const modalScreenSlider = document.getElementById('modalScreenSlider');
@@ -13,18 +15,14 @@ const nextBtn = document.getElementById('nextBtn');
 const btnHome = document.getElementById('home');
 const track = document.getElementById('track');
 
-const area = document.body.offsetWidth;
+const visibleArea = 1024;
 
 let clientTouchX;
 let swiperCount = 0;
 
-descriptionContainer.addEventListener('touchstart', (event) => {
-    // event.preventDefault();
+descriptionContainer.addEventListener('touchmove', (event) => {
     event.stopPropagation();
-})
-
-descriptionContainer.addEventListener('resize', (event) => {
-    console.log('THIS SHOULD NOT WORK')
+    event.preventDefault();
 })
 
 descriptionScroll.addEventListener('scroll', function (event) {
@@ -78,7 +76,7 @@ function touchMove(event) {
 }
 
 function changeTrackPos(value) {
-    track.style.transform = `translateX(-${value * area}px)`;
+    track.style.transform = `translateX(-${value * visibleArea}px)`;
 }
 
 function decrementValue(value) {
@@ -148,3 +146,7 @@ setInterval(() => {
         thingsSecondPage.classList.remove('active');
     }
 }, 100)
+
+let f = new FontFace('DIN pro', 'url(../assets/fonts/DINpro/fonts/din_pro_condensed_regular.woff)'); // << remove this after test
+
+});
