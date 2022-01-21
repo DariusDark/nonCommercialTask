@@ -82,7 +82,7 @@ function incrementValue(value) {
 function modalScreenInit() {
     modalScreen.addEventListener('touchstart', function (event) {
         event.stopPropagation();
-        console.log('modalScreen')
+
         if (this === event.target) {
             this.classList.remove('active');
         }
