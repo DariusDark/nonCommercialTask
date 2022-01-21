@@ -18,11 +18,24 @@ const area = document.body.offsetWidth;
 let clientTouchX;
 let swiperCount = 0;
 
-descriptionScroll.addEventListener('scroll', function () {
+descriptionContainer.addEventListener('touchstart', (event) => {
+    // event.preventDefault();
+    event.stopPropagation();
+})
+
+descriptionContainer.addEventListener('resize', (event) => {
+    console.log('THIS SHOULD NOT WORK')
+})
+
+descriptionScroll.addEventListener('scroll', function (event) {
     const scrollTop = this.scrollTop;
 
     descriptionContainer.scrollTop = scrollTop;
 });
+
+descriptionScroll.addEventListener('touchstart', (event) => {
+    event.stopPropagation();
+})
 
 btnForward.addEventListener('click', () => handleClick(1), false);
 btnHome.addEventListener('click', () => handleClick(0), false);
@@ -32,22 +45,24 @@ document.addEventListener('touchstart', touchStart, false)
 
 function handleClick(value) {
     swiperCount = value;
-
+    
     if (modalScreen.classList.contains('active')) {
         modalScreen.classList.remove('active');
         document.addEventListener('touchstart', touchStart);
     }
-
+    
     changeTrackPos(swiperCount);
 }
 
 function touchStart(event) {
+    console.log('start')
     clientTouchX = event.touches['0'].clientX;
     document.addEventListener('touchmove', touchMove, false)
 
 }
 
 function touchMove(event) {
+    console.log('move')
     let clientMoveX = event.touches['0'].clientX;
     if (clientMoveX > clientTouchX) {
         decrementValue(swiperCount);
@@ -67,29 +82,28 @@ function changeTrackPos(value) {
 }
 
 function decrementValue(value) {
-    if (value <= 2 && value > 0) --swiperCount
+    if (value > 0) --swiperCount
 }
 
 function incrementValue(value) {
-    if (value >= 0 && value < 2) ++swiperCount
+    if (value < 2) ++swiperCount
 }
 
 function modalScreenInit() {
-    modalScreen.addEventListener('click', function (event) {
+    modalScreen.addEventListener('touchstart', function (event) {
+        event.stopPropagation();
+        console.log('modalScreen')
         if (this === event.target) {
             this.classList.remove('active');
-            document.addEventListener('touchstart', touchStart, false);
         }
     }, false);
 
     btnCloseModal.addEventListener('click', () => {
         modalScreen.classList.remove('active');
-        document.addEventListener('touchstart', touchStart, false);
     }, false);
 
     btnOpenModal.addEventListener('click', () => {
         modalScreen.classList.add('active');
-        document.removeEventListener('touchstart', touchStart);
     }, false);
 }
 
