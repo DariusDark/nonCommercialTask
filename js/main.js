@@ -20,11 +20,6 @@ const visibleArea = 1024;
 let clientTouchX;
 let swiperCount = 0;
 
-descriptionContainer.addEventListener('touchmove', (event) => {
-    event.stopPropagation();
-    event.preventDefault();
-})
-
 descriptionScroll.addEventListener('scroll', function (event) {
     const scrollTop = this.scrollTop;
 
@@ -33,12 +28,12 @@ descriptionScroll.addEventListener('scroll', function (event) {
 
 descriptionScroll.addEventListener('touchstart', (event) => {
     event.stopPropagation();
-})
+});
 
-btnForward.addEventListener('click', () => handleClick(1), false);
-btnHome.addEventListener('click', () => handleClick(0), false);
+btnForward.addEventListener('touchstart', () => handleClick(1), false);
+btnHome.addEventListener('touchstart', () => handleClick(0), false);
 
-document.addEventListener('touchstart', touchStart, false)
+document.addEventListener('touchstart', touchStart, false);
 
 
 function handleClick(value) {
@@ -46,21 +41,18 @@ function handleClick(value) {
     
     if (modalScreen.classList.contains('active')) {
         modalScreen.classList.remove('active');
-        document.addEventListener('touchstart', touchStart);
     }
     
     changeTrackPos(swiperCount);
 }
 
 function touchStart(event) {
-    console.log('start')
     clientTouchX = event.touches['0'].clientX;
-    document.addEventListener('touchmove', touchMove, false)
+    document.addEventListener('touchmove', touchMove, false);
 
 }
 
 function touchMove(event) {
-    console.log('move')
     let clientMoveX = event.touches['0'].clientX;
     if (clientMoveX > clientTouchX) {
         decrementValue(swiperCount);
@@ -147,8 +139,4 @@ setInterval(() => {
     }
 }, 100)
 
-let f = new FontFace('DIN pro', 'url(../assets/fonts/DINpro/fonts/din_pro_condensed_regular.woff)'); // << remove this after test
-
 });
-
-// test
