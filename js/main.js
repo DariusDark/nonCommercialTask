@@ -150,3 +150,5 @@ setInterval(() => {
 let f = new FontFace('DIN pro', 'url(../assets/fonts/DINpro/fonts/din_pro_condensed_regular.woff)'); // << remove this after test
 
 });
+
+// test
