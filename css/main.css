@@ -602,6 +602,11 @@ body {
     display: flex;
     flex-direction: column;
 }
+
+.modal-screen__slider-track {
+    position: relative;
+}
+
 .modal-screen__slide {
     position: absolute;
     opacity: 0;

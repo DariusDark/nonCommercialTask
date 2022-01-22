@@ -1,8 +1,8 @@
 window.addEventListener('load', () => {
 
+    const modalScreenSliderTrack = document.getElementById('modalScreenSliderTrack');
     const descriptionContainer = document.getElementById('descriptionContainer');
     const descriptionScroll = document.getElementById('descriptionScroll');
-    const modalScreenSlider = document.getElementById('modalScreenSlider');
     const thingsSecondPage = document.getElementById('thingsSecondPage');
     const modalScreenDots = document.getElementById('modalScreenDots');
     const btnCloseModal = document.getElementById('closeModal');
@@ -57,7 +57,7 @@ window.addEventListener('load', () => {
         if (isSwiperActive) {
 
             let clientMoveX = event.touches['0'].clientX;
-            
+
             if (clientMoveX > clientTouchX) {
                 if (swiperCount > 0) --swiperCount;
             } else {
@@ -95,7 +95,7 @@ window.addEventListener('load', () => {
 
     function sliderInit() {
         let currentSlide = 0;
-        let childrenQuantity = modalScreenSlider.children.length - 1;
+        let childrenQuantity = modalScreenSliderTrack.children.length;
 
         btnPrev.addEventListener('touchend', () => {
             if (currentSlide > 0) {
@@ -113,10 +113,10 @@ window.addEventListener('load', () => {
 
         function slideIteration(activeEl, elementsQuantity) {
             for (let i = 0; i < elementsQuantity; i++) {
-                modalScreenSlider.children[i].classList.remove('show');
+                modalScreenSliderTrack.children[i].classList.remove('show');
                 modalScreenDots.children[i].checked = false;
             }
-            modalScreenSlider.children[activeEl].classList.add('show');
+            modalScreenSliderTrack.children[activeEl].classList.add('show');
             modalScreenDots.children[activeEl].checked = true;
         }
     }
