@@ -1,142 +1,139 @@
 window.addEventListener('load', () => {
 
-const descriptionContainer = document.getElementById('descriptionContainer');
-const descriptionScroll = document.getElementById('descriptionScroll');
-const modalScreenSlider = document.getElementById('modalScreenSlider');
-const thingsSecondPage = document.getElementById('thingsSecondPage');
-const modalScreenDots = document.getElementById('modalScreenDots');
-const btnCloseModal = document.getElementById('closeModal');
-const modalScreen = document.getElementById('modalScreen');
-const btnOpenModal = document.getElementById('openModal');
-const btnForward = document.getElementById('btnForward');
-const scrollItem = document.getElementById('scrollItem');
-const prevBtn = document.getElementById('prevBtn');
-const nextBtn = document.getElementById('nextBtn');
-const btnHome = document.getElementById('home');
-const track = document.getElementById('track');
+    const descriptionContainer = document.getElementById('descriptionContainer');
+    const descriptionScroll = document.getElementById('descriptionScroll');
+    const modalScreenSlider = document.getElementById('modalScreenSlider');
+    const thingsSecondPage = document.getElementById('thingsSecondPage');
+    const modalScreenDots = document.getElementById('modalScreenDots');
+    const btnCloseModal = document.getElementById('closeModal');
+    const modalScreen = document.getElementById('modalScreen');
+    const btnOpenModal = document.getElementById('openModal');
+    const btnForward = document.getElementById('btnForward');
+    const scrollItem = document.getElementById('scrollItem');
+    const btnPrev = document.getElementById('btnPrev');
+    const btnNext = document.getElementById('btnNext');
+    const btnHome = document.getElementById('btnHome');
+    const track = document.getElementById('track');
 
-const visibleArea = 1024;
+    const visibleArea = 1024;
 
-let clientTouchX;
-let swiperCount = 0;
+    let clientTouchX;
+    let swiperCount = 0;
+    let isSwiperActive = false;
 
-descriptionScroll.addEventListener('scroll', function (event) {
-    const scrollTop = this.scrollTop;
+    descriptionScroll.addEventListener('scroll', function () {
+        const scrollTop = this.scrollTop;
 
-    descriptionContainer.scrollTop = scrollTop;
-});
+        descriptionContainer.scrollTop = scrollTop;
+    });
 
-descriptionScroll.addEventListener('touchstart', (event) => {
-    event.stopPropagation();
-});
+    descriptionScroll.addEventListener('touchstart', (event) => {
+        event.stopPropagation();
+    });
 
-btnForward.addEventListener('touchstart', () => handleClick(1), false);
-btnHome.addEventListener('touchstart', () => handleClick(0), false);
+    btnForward.addEventListener('touchend', () => handleTouch(1), false);
+    btnHome.addEventListener('touchend', () => handleTouch(0), false);
 
-document.addEventListener('touchstart', touchStart, false);
+    document.addEventListener('touchstart', touchStart, false);
 
+    function handleTouch(value) {
+        swiperCount = value;
 
-function handleClick(value) {
-    swiperCount = value;
-    
-    if (modalScreen.classList.contains('active')) {
-        modalScreen.classList.remove('active');
+        if (modalScreen.classList.contains('active')) {
+            modalScreen.classList.remove('active');
+        }
+
+        changeTrackPos(swiperCount);
     }
-    
-    changeTrackPos(swiperCount);
-}
 
-function touchStart(event) {
-    clientTouchX = event.touches['0'].clientX;
+    function touchStart(event) {
+        isSwiperActive = true;
+        clientTouchX = event.touches['0'].clientX;
+    }
+
     document.addEventListener('touchmove', touchMove, false);
 
-}
+    function touchMove(event) {
+        if (isSwiperActive) {
 
-function touchMove(event) {
-    let clientMoveX = event.touches['0'].clientX;
-    if (clientMoveX > clientTouchX) {
-        decrementValue(swiperCount);
+            let clientMoveX = event.touches['0'].clientX;
+            
+            if (clientMoveX > clientTouchX) {
+                if (swiperCount > 0) --swiperCount;
+            } else {
+                if (swiperCount < 2) ++swiperCount;
+            }
 
-        changeTrackPos(swiperCount);
-    } else {
-        incrementValue(swiperCount);
-
-        changeTrackPos(swiperCount);
+            isSwiperActive = !isSwiperActive;
+            changeTrackPos(swiperCount);
+        }
     }
 
-    document.removeEventListener('touchmove', touchMove);
-}
+    function changeTrackPos(value) {
+        track.style.transform = `translateX(-${value * visibleArea}px)`;
+    }
 
-function changeTrackPos(value) {
-    track.style.transform = `translateX(-${value * visibleArea}px)`;
-}
+    function modalScreenInit() {
+        modalScreen.addEventListener('touchstart', function (event) {
+            event.stopPropagation();
+        }, false);
 
-function decrementValue(value) {
-    if (value > 0) --swiperCount
-}
+        modalScreen.addEventListener('touchend', function (event) {
+            if (this === event.target) {
+                this.classList.remove('active');
+            }
+        }, false);
 
-function incrementValue(value) {
-    if (value < 2) ++swiperCount
-}
+        btnCloseModal.addEventListener('touchend', () => {
+            modalScreen.classList.remove('active');
+        }, false);
 
-function modalScreenInit() {
-    modalScreen.addEventListener('touchstart', function (event) {
-        event.stopPropagation();
+        btnOpenModal.addEventListener('touchend', () => {
+            modalScreen.classList.add('active');
+        }, false);
+    }
 
-        if (this === event.target) {
-            this.classList.remove('active');
+    function sliderInit() {
+        let currentSlide = 0;
+        let childrenQuantity = modalScreenSlider.children.length - 1;
+
+        btnPrev.addEventListener('touchend', () => {
+            if (currentSlide > 0) {
+                currentSlide--;
+                slideIteration(currentSlide, childrenQuantity);
+            }
+        });
+
+        btnNext.addEventListener('touchend', () => {
+            if (currentSlide < childrenQuantity - 1) {
+                currentSlide++;
+                slideIteration(currentSlide, childrenQuantity);
+            }
+        });
+
+        function slideIteration(activeEl, elementsQuantity) {
+            for (let i = 0; i < elementsQuantity; i++) {
+                modalScreenSlider.children[i].classList.remove('show');
+                modalScreenDots.children[i].checked = false;
+            }
+            modalScreenSlider.children[activeEl].classList.add('show');
+            modalScreenDots.children[activeEl].checked = true;
         }
-    }, false);
+    }
 
-    btnCloseModal.addEventListener('click', () => {
-        modalScreen.classList.remove('active');
-    }, false);
 
-    btnOpenModal.addEventListener('click', () => {
-        modalScreen.classList.add('active');
-    }, false);
-}
+    sliderInit();
+    modalScreenInit();
 
-function sliderInit() {
-    let i = 0;
-
-    prevBtn.addEventListener('click', () => {
-        if (i <= 0) {
-            i = 0;
-        } else {
-            modalScreenSlider.children[i].classList.remove('show');
-            modalScreenDots.children[i].checked = false;
-            modalScreenSlider.children[--i].classList.add('show');
-            modalScreenDots.children[i].checked = true;
-        }
-    })
-
-    nextBtn.addEventListener('click', () => {
-        if (i >= 1) {
-            i = 1
-        } else {
-            modalScreenSlider.children[i].classList.remove('show');
-            modalScreenDots.children[i].checked = false;
-            modalScreenSlider.children[++i].classList.add('show');
-            modalScreenDots.children[i].checked = true;
-        }
-    })
-}
-
-sliderInit();
-modalScreenInit();
-
-setTimeout(() => {
     scrollItem.style.height = descriptionContainer.scrollHeight + 'px';
     descriptionScroll.style.height = descriptionContainer.offsetHeight + 'px';
-}, 0)
 
-setInterval(() => {
-    if (swiperCount >= 1) {
-        thingsSecondPage.classList.add('active');
-    } else {
-        thingsSecondPage.classList.remove('active');
-    }
-}, 100)
+    setInterval(() => {
+        if (swiperCount >= 1) {
+            thingsSecondPage.classList.add('active');
+        } else {
+            thingsSecondPage.classList.remove('active');
+        }
+    }, 100);
 
 });
